@@ -66,3 +66,33 @@ npm run test:e2e
 ```sh
 npm run lint
 ```
+
+<br />
+<br />
+
+## Commit rules
+https://github.com/arvinxx/gitmoji-commit-workflow/tree/master/packages/commitlint-config
+
+https://github.com/conventional-changelog/commitlint/tree/master/@commitlint/config-conventional
+
+**Commit types:**
+
+**build:** changes affecting build systems or external dependencies.
+<br>
+**ci:** updating configuration files for continuous integration and deployment services
+<br>
+**chore:** updating grunt tasks etc.; no production code change
+<br>
+**docs:** documentation-only changes
+<br>
+**feat:** a new feature
+<br>
+**fix:** a bug fix
+<br>
+**perf:** a code change that improves performance
+<br>
+**refactor:** a code change that neither fixes a bug nor adds a feature
+<br>
+**style:** changes that do not affect the meaning of the code (white-space, formatting, missing **semicolons, etc.)
+<br>
+**test:** adding missing tests or correcting existing tests
