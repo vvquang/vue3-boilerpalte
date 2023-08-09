@@ -1,7 +1,7 @@
 # This workflow will do a clean installation of node dependencies, cache/restore them, build the source code and run tests across different versions of node
 # For more information see: https://docs.github.com/en/actions/automating-builds-and-tests/building-and-testing-nodejs
 
-name: Node.js CI
+name: Build and Test
 
 on:
   push:
@@ -11,12 +11,11 @@ on:
 
 jobs:
   build:
-
     runs-on: ubuntu-latest
 
     strategy:
       matrix:
-        node-version: [16.x]
+        node-version: [18.x]
         # See supported Node.js release schedule at https://nodejs.org/en/about/releases/
 
     steps:
@@ -29,7 +28,7 @@ jobs:
       uses: actions/setup-node@v3
       with:
         node-version: ${{ matrix.node-version }}
-        # cache: 'yarn'
+        cache: 'yarn'
 
     # Install dependencies
     - name: Install dependencies
@@ -39,18 +38,27 @@ jobs:
     - name: Execute Unit tests
       run: yarn test:unit:ci
 
-    # # Deploy to Netlify
-    # - name: Netlify Deploy
-    #   uses: jsmrcaga/action-netlify-deploy@v2.0.0
-    #   with:
-    #     # Auth token to use with netlify
-    #     NETLIFY_AUTH_TOKEN: ${{ secrets.NETLIFY_AUTH_TOKEN }}
-    #     # Your Netlify site id
-    #     NETLIFY_SITE_ID:  ${{ secrets.NETLIFY_SITE_ID }}
-    #     # Directory where built files are stored
-    #     build_directory: './dist'
-    #     # Command to install dependencies
-    #     install_command: yarn install
-    #     # Command to build static website
-    #     build_command: yarn build 
+deployment:
+    needs: [build]
+    runs-on: ubuntu-latest
+    environment: production
+
+    steps:
+    - name: Checkout source code
+      uses: actions/checkout@v2
+
+    # Deploy to Netlify
+    - name: Netlify Deploy
+      uses: jsmrcaga/action-netlify-deploy@v2.0.0
+      with:
+        # Auth token to use with netlify
+        NETLIFY_AUTH_TOKEN: ${{ secrets.NETLIFY_AUTH_TOKEN }}
+        # Your Netlify site id
+        NETLIFY_SITE_ID:  ${{ secrets.NETLIFY_SITE_ID }}
+        # Directory where built files are stored
+        build_directory: './dist'
+        # Command to install dependencies
+        install_command: yarn install
+        # Command to build static website
+        build_command: yarn build 
 
