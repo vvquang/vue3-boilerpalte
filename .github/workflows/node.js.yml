@@ -9,8 +9,11 @@ on:
   pull_request:
     branches: [ "main" ]
 
+permissions:
+  contents: read
+  
 jobs:
-  build:
+  test:
     runs-on: ubuntu-latest
 
     strategy:
@@ -38,6 +41,13 @@ jobs:
     - name: Execute Unit tests
       run: yarn test:unit:ci
 
+  deploy:
+    runs-on: ubuntu-latest
+    needs: test
+    if: github.ref == 'refs/heads/main'
+    environment: production
+    concurrency: production
+    steps:
 
     # Deploy to Netlify
     - name: Netlify Deploy
