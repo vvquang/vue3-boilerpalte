@@ -5,12 +5,15 @@ name: Build, test and deploy
 
 on:
   push:
-    branches: [ "main" ]
+    branches: [ "main", "develop" ]
   pull_request:
     branches: [ "main" ]
 
+permissions:
+  contents: read
+
 jobs:
-  build:
+  test:
     runs-on: ubuntu-latest
 
     strategy:
@@ -39,18 +42,25 @@ jobs:
       run: yarn test:unit:ci
 
 
-    # Deploy to Netlify
-    - name: Netlify Deploy
-      uses: jsmrcaga/action-netlify-deploy@v2.0.0
-      with:
-        # Auth token to use with netlify
-        NETLIFY_AUTH_TOKEN: ${{ secrets.NETLIFY_AUTH_TOKEN }}
-        # Your Netlify site id
-        NETLIFY_SITE_ID:  ${{ secrets.NETLIFY_SITE_ID }}
-        # Directory where built files are stored
-        build_directory: './dist'
-        # Command to install dependencies
-        install_command: yarn install
-        # Command to build static website
-        build_command: yarn build 
-
+  deployment:
+    needs: test
+    if: github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    environment: production
+    concurrency: production
+    steps:
+      # Deploy to Netlify
+      - name: Netlify Deploy
+        uses: jsmrcaga/action-netlify-deploy@v2.0.0
+        with:
+          branch: 'main'
+          # Auth token to use with netlify
+          NETLIFY_AUTH_TOKEN: ${{ secrets.NETLIFY_AUTH_TOKEN }}
+          # Your Netlify site id
+          NETLIFY_SITE_ID:  ${{ secrets.NETLIFY_SITE_ID }}
+          # Directory where built files are stored
+          build_directory: './dist'
+          # Command to install dependencies
+          install_command: yarn install
+          # Command to build static website
+          build_command: yarn build 
