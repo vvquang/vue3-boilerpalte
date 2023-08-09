@@ -9,6 +9,9 @@ on:
   pull_request:
     branches: [ "main" ]
 
+# env:
+#   ABC: 1.2.3
+
 permissions:
   contents: read
 
@@ -39,16 +42,51 @@ jobs:
     
     # Run tests
     - name: Execute Unit tests
+      id: vitest
       run: yarn test:unit:ci
+      continue-on-error: true
+
+    # Error message
+    - name: Set message if code frontend fail
+      if: steps.vitest.outcome == 'failure'
+      run: echo "fe_failed_message=[NEWS] Some test in frontend fail" >> $GITHUB_ENV
+
+    - name: Notify to slack if code fail
+      if: steps.vitest.outcome == 'failure'
+      uses: rtCamp/action-slack-notify@v2
+      env:
+        SLACK_CHANNEL:  vue3-boilerplate
+        SLACK_COLOR:    '#BD7532'
+        SLACK_ICON:     https://xxx.com/icon_180x180.png
+        SLACK_MESSAGE:  ${{ env.fe_failed_message }}
+        SLACK_TITLE:    CI Message
+        SLACK_USERNAME: Vue3 Boilerplate NEWS - Github Action
+        SLACK_WEBHOOK:  ${{ secrets.WEBHOOK }}
+
+    # Break CI pipeline when error occur
+    - name: Exit if fail
+      if: steps.vitest.outcome == 'failure'
+      run: exit 1
 
 
   deployment:
     needs: test
-    if: github.ref == 'refs/heads/main'
+    if: github.ref == 'refs/heads/main' && success()
     runs-on: ubuntu-latest
     environment: production
     concurrency: production
     steps:
+      # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      # Setup Node.js environment
+      - name: Use Node.js 18.x
+        uses: actions/setup-node@v3
+        with:
+          node-version: '18.x'
+          cache: 'yarn'
+
       # Deploy to Netlify
       - name: Netlify Deploy
         uses: jsmrcaga/action-netlify-deploy@v2.0.0
@@ -62,4 +100,24 @@ jobs:
           # Command to install dependencies
           install_command: yarn install
           # Command to build static website
-          build_command: yarn build 
+          build_command: yarn build
+
+      # Set message env for success or failure
+      - if: success()
+        run: echo "message=Congratulations on your successful release for staging :rocket:" >> $GITHUB_ENV
+
+      - if: failure()
+        run: echo "message=Release staging failed, Please try again or release manually :uongtra:" >> $GITHUB_ENV
+
+      # Noti to slack for sucess or failure
+      - name: Notify to slack
+        if: always()
+        uses: rtCamp/action-slack-notify@v2.2.0
+        env:
+          SLACK_CHANNEL:  vue3-boilerplate
+          SLACK_COLOR:    '#32BD52'
+          SLACK_ICON:     https://xxx.com/icon_180x180.png
+          SLACK_MESSAGE:  ${{ env.message }}
+          SLACK_TITLE:    CD Message
+          SLACK_USERNAME: Vue3 Boilerplate NEWS - Github Action
+          SLACK_WEBHOOK:  ${{ secrets.WEBHOOK }}
