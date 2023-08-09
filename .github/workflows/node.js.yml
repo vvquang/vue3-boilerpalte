@@ -37,7 +37,7 @@ jobs:
     
     # Run tests
     - name: Execute Unit tests
-    - run: yarn test:unit:ci
+      run: yarn test:unit:ci
 
     # # Deploy to Netlify
     # - name: Netlify Deploy
