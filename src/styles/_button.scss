@@ -1,0 +1,37 @@
+.button {
+  padding: 8px 16px;
+  border-radius: 6px;
+  font-weight: bold;
+  text-decoration: none;
+  cursor: pointer;
+  background-color: $color-grey-100;
+  color: $color-grey-0;
+  border: 1px solid #ddd;
+}
+
+.button-primary {
+  background-color: $color-blue-6;
+  border-color: $color-blue-6;
+  color: $color-grey-100;
+}
+.button-primary:hover {
+  background-color: $color-blue-7;
+}
+
+.button-danger {
+  background-color: $color-red-6;
+  border-color: $color-red-6;
+  color: $color-grey-100;
+}
+.button-danger:hover {
+  background-color: $color-red-7;
+}
+
+.button-warring {
+  background-color: $color-yellow-6;
+  border-color: $color-yellow-6;
+  color: $color-grey-100;
+}
+.button-warring:hover {
+  background-color: $color-yellow-7;
+}

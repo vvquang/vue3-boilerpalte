@@ -1,0 +1,24 @@
+.notification-success,
+.notification-error,
+.notification-warring {
+  max-width: 320px;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+}
+
+.notification-success {
+  background: $color-secondary-500 !important;
+}
+
+.notification-error {
+  background: $color-red-5 !important;
+}
+
+.notification-warring {
+  background: $color-yellow-5 !important;
+}
+
+.notification-info {
+  background: $color-blue-5 !important;
+}
