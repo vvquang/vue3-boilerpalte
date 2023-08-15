@@ -52,13 +52,29 @@ const handleClick = (type: ButtonType) => {
     </div>
 
     <div class="dropdown-wrapper">
-      <v-dropdown text="Top" placement="top"><span>Content top.............</span></v-dropdown>
-      <v-dropdown text="Top Left" placement="topLeft"><span>Content top left...............</span></v-dropdown>
-      <v-dropdown text="Top Right" placement="topRight"><span>Content top right...............</span></v-dropdown>
-      <v-dropdown text="Bottom" placement="bottom"><span>Content bottom................</span></v-dropdown>
-      <v-dropdown text="Bottom Left" placement="bottomLeft"><span>Content bottom left..................</span></v-dropdown>
-      <v-dropdown text="Bottom Right" placement="bottomRight"><span>Content bottom right.............</span></v-dropdown>
+      <div
+        v-for="(placementItem, index) in [
+          'auto',
+          'top',
+          'topLeft',
+          'topRight',
+          'bottom',
+          'bottomLeft',
+          'bottomRight',
+        ]"
+        :key="index"
+      >
+        <v-dropdown :text="placementItem" :placement="placementItem">
+          <ul>
+            <li v-for="(content, contentIdx) in Array(3).fill(undefined)" :key="contentIdx">
+              {{ contentIdx }}st menu item menu itemmenu itemmenu itemmenu itemmenu
+            </li>
+          </ul>
+        </v-dropdown>
+      </div>
     </div>
+
+
   </div>
 </template>
 
