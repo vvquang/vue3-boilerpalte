@@ -1,7 +1,7 @@
 // Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
 
 exports[`Dropdown > renders properly 1`] = `
-"<div class=\\"dropdown\\" style=\\"--toggle-height: 0px;\\"><button class=\\"button dropdown-toggle\\"><span>Label</span><img alt=\\"angle down\\" class=\\"angle-down\\" src=\\"/src/assets/images/icon_angle-down.svg\\" width=\\"16\\" height=\\"16\\"></button>
+"<div class=\\"dropdown\\" style=\\"--max-width: 1004px; --toggle-height: 0px;\\"><button class=\\"button dropdown-toggle\\"><span>Label</span><img alt=\\"angle down\\" class=\\"angle-down\\" src=\\"/src/assets/images/icon_angle-down.svg\\" width=\\"16\\" height=\\"16\\"></button>
   <!--v-if-->
 </div>"
 `;
