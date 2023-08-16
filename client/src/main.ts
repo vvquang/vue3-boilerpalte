@@ -7,7 +7,7 @@ import { createPinia } from 'pinia'
 import App from '@/App.vue'
 import router from '@/router'
 import registerGlobalComponents from '@/plugins/global-components'
-import { mockApi } from '@/__mocks__'
+// import { mockApi } from '@/__mocks__'
 
 const pinia = createPinia()
 
@@ -21,4 +21,4 @@ app.use(router)
 app.mount('#app')
 
 // mock api
-mockApi();
+// mockApi();

@@ -40,6 +40,7 @@ const handleRefreshToken = async (error: any) => {
 
     // save new token
     const { accessToken: accessTokenNew, refreshToken: refreshTokenNew } = refreshRes?.data?.result?.data || {}
+
     StorageService.set(storageKeys.authProfile, {
       accessToken: accessTokenNew,
       refreshToken: refreshTokenNew,
