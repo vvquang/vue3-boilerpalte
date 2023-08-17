@@ -7,7 +7,7 @@ on:
   push:
     branches: [ "main", "develop" ]
   pull_request:
-    branches: [ "main" ]
+    branches: [ "main", "develop" ]
 
 # env:
 #   ABC: 1.2.3
@@ -16,7 +16,7 @@ permissions:
   contents: read
 
 jobs:
-  test:
+  test-client:
     runs-on: ubuntu-latest
 
     strategy:
@@ -38,8 +38,8 @@ jobs:
 
     # Install dependencies
     - name: Install dependencies
-      run: yarn install
-    
+      run: cd client && yarn install
+
     # Run tests
     - name: Execute Unit tests
       id: vitest
@@ -70,7 +70,7 @@ jobs:
 
 
   deployment:
-    needs: test
+    needs: test-client
     if: github.ref == 'refs/heads/main' && success()
     runs-on: ubuntu-latest
     environment: production
