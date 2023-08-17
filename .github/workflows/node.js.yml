@@ -18,6 +18,9 @@ permissions:
 jobs:
   test-client:
     runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: client
 
     strategy:
       matrix:
@@ -25,13 +28,10 @@ jobs:
         # See supported Node.js release schedule at https://nodejs.org/en/about/releases/
 
     steps:
-    # Install dependencies
-    - name: Move to client
-      run: cd client
-
     # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
     - name: Checkout code
       uses: actions/checkout@v3
+
 
     # Setup Node.js environment
     - name: Use Node.js ${{ matrix.node-version }}
@@ -77,6 +77,9 @@ jobs:
     needs: test-client
     if: github.ref == 'refs/heads/main' && success()
     runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: client
     environment: production
     concurrency: production
     steps:
