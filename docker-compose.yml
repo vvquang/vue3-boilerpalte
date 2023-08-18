@@ -42,11 +42,10 @@ services:
     #   MONGO_INITDB_ROOT_USERNAME: admin
     #   MONGO_INITDB_ROOT_PASSWORD: password
     volumes:
-      - ./tmp/db:/data/db
-      # - mongo-data::/data/db
+      - mongo-data:/data/db
     networks:
       - dev-network
 
-# volumes:
-#   mongo-data:
-#     driver: local
+volumes:
+  mongo-data:
+    driver: local
