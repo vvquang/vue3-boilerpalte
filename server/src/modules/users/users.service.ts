@@ -16,29 +16,28 @@ export class UsersService {
     private authService: AuthService,
   ) {}
 
-  create(createdUserDto: CreateUserDto): Observable<IUser> {
+  create(createdUserDto: CreateUserDto): Observable<any> {
     return this.mailExists(createdUserDto.email).pipe(
       switchMap((exists: boolean) => {
-        if (!exists) {
-          return this.authService.hashPassword(createdUserDto.password).pipe(
-            switchMap((passwordHash: string) => {
-              // Overwrite the user password with the hash, to store it in the db
-              createdUserDto.password = passwordHash;
-
-              const newUser = new this.userRepositoryModel(createdUserDto);
-
-              return from(newUser.save()).pipe(
-                map((savedUser: IUser) => {
-                  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-                  const { password, ...user } = savedUser;
-                  return user;
-                }),
-              );
-            }),
-          );
-        } else {
+        if (exists) {
           throw new HttpException('Email already in use', HttpStatus.CONFLICT);
         }
+
+        return this.authService.hashPassword(createdUserDto.password).pipe(
+          switchMap((passwordHash: string) => {
+            // Overwrite the user password with the hash, to store it in the db
+            createdUserDto.password = passwordHash;
+            const newUser = new this.userRepositoryModel(createdUserDto);
+
+            return from(newUser.save()).pipe(
+              map((savedUser: IUser) => {
+                // eslint-disable-next-line @typescript-eslint/no-unused-vars
+                const { password, ...user } = savedUser;
+                return user;
+              }),
+            );
+          }),
+        );
       }),
     );
   }
