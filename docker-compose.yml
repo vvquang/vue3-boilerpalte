@@ -6,8 +6,8 @@ networks:
     name: dev-network
 
 services:
-  client:
-    container_name: client-container
+  web:
+    container_name: web
     restart: always
     build: ./client
     stdin_open: true
@@ -19,7 +19,7 @@ services:
       - dev-network
 
   api:
-    container_name: backend-container
+    container_name: api
     restart: always
     build: ./server
     ports:
@@ -30,7 +30,7 @@ services:
       - dev-network
 
   mongo:
-    container_name: mongodb-container
+    container_name: mongodb
     image: mongo
     restart: always
     # expose:
