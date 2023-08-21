@@ -16,8 +16,11 @@ permissions:
   contents: read
 
 jobs:
-  test:
+  test-client:
     runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: ./client
 
     strategy:
       matrix:
@@ -29,17 +32,19 @@ jobs:
     - name: Checkout code
       uses: actions/checkout@v3
 
+
     # Setup Node.js environment
     - name: Use Node.js ${{ matrix.node-version }}
       uses: actions/setup-node@v3
       with:
+        cache-dependency-path: './client/yarn.lock'
         node-version: ${{ matrix.node-version }}
         cache: 'yarn'
 
     # Install dependencies
     - name: Install dependencies
       run: yarn install
-    
+
     # Run tests
     - name: Execute Unit tests
       id: vitest
@@ -70,9 +75,12 @@ jobs:
 
 
   deployment:
-    needs: test
+    needs: test-client
     if: github.ref == 'refs/heads/main' && success()
     runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: ./client
     environment: production
     concurrency: production
     steps:

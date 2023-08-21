@@ -1,0 +1,51 @@
+version: '3.9'
+
+networks:
+  dev-network:
+    driver: bridge
+    name: dev-network
+
+services:
+  web:
+    container_name: web
+    restart: always
+    build: ./client
+    stdin_open: true
+    ports:
+      - "3000:3000"
+    depends_on:
+      - api
+    networks:
+      - dev-network
+
+  api:
+    container_name: api
+    restart: always
+    build: ./server
+    ports:
+      - "8080:8080"
+    depends_on:
+      - mongo
+    networks:
+      - dev-network
+
+  mongo:
+    container_name: mongodb
+    image: mongo
+    restart: always
+    # expose:
+    #   - "27017"
+    ports:
+      - "27017:27017"
+    # environment:
+    #   MONGO_INITDB_DATABASE: logs
+    #   MONGO_INITDB_ROOT_USERNAME: admin
+    #   MONGO_INITDB_ROOT_PASSWORD: password
+    volumes:
+      - mongo-data:/data/db
+    networks:
+      - dev-network
+
+volumes:
+  mongo-data:
+    driver: local
